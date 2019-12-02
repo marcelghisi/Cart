@@ -24,8 +24,8 @@ public class ItemController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Item> createItem(@RequestBody Item user){
-        Item newItem = itemService.create(user);
+    public ResponseEntity<Item> createItem(@RequestBody Item item){
+        final Item newItem = itemService.create(item);
         return ResponseEntity.ok().body(newItem);
     }
     @DeleteMapping("/items/{itemId}")
@@ -35,13 +35,13 @@ public class ItemController {
     }
     @GetMapping("/items/{itemId}")
     public ResponseEntity<Item> findById(@PathVariable String itemId){
-        Item newItem = null;
         try {
-            newItem = itemService.findById(itemId);
+            final Item newItem = itemService.findById(itemId);
+            return ResponseEntity.ok().body(newItem);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return ResponseEntity.ok().body(newItem);
+        return ResponseEntity.notFound().build();
     }
 
     @GetMapping("/items")

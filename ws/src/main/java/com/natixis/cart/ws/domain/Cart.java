@@ -4,11 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.Objects;
 
 @Builder
@@ -16,27 +14,23 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-public class User implements Serializable {
+public class Cart implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    @Id
-    private String id;
-    private String firstName;
-    private String email;
-    private List<Cart> cart;
+    private Integer quantidade;
+    private Item item;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id) &&
-                firstName.equals(user.firstName) &&
-                email.equals(user.email);
+        Cart cart = (Cart) o;
+        return  quantidade.equals(cart.quantidade) &&
+                item.equals(cart.item);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, email);
+        return Objects.hash(quantidade,item);
     }
 }

@@ -14,12 +14,12 @@ public class ItemService {
     @Autowired
     ItemRepository itemRepository;
 
-    public Item create(Item item) {
+    public Item create(final Item item) {
         return itemRepository.save(item);
     }
 
     public Item findById(String itemId) throws Exception {
-        Optional<Item> item = itemRepository.findById(itemId);
+        final Optional<Item> item = itemRepository.findById(itemId);
         return item.orElseThrow(()-> new Exception("todo"));
     }
 
@@ -27,11 +27,11 @@ public class ItemService {
         return itemRepository.findAll();
     }
 
-    public void delete(String itemId) {
+    public void delete(final String itemId) {
         itemRepository.deleteById(itemId);
     }
 
-    public Item update(Item item) {
+    public Item update(final Item item) {
         return itemRepository.save(item);
     }
 }

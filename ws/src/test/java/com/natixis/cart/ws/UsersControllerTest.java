@@ -108,7 +108,7 @@ public class UsersControllerTest {
 
     @Test
     public void test_Delete_User_From_DataBase() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_USER+"/"+USER_ID)
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL_API_USER+"/"+USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
