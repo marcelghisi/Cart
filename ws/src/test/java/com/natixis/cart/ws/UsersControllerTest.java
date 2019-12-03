@@ -22,6 +22,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -52,9 +53,10 @@ public class UsersControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(user.getId()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(user.getFirstName()))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(user.getEmail()));
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(user.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(user.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(user.getEmail()));
     }
    @Test
     public void test_Insert_New_User_ToDataBase() throws Exception {
@@ -66,10 +68,26 @@ public class UsersControllerTest {
                .accept(MediaType.APPLICATION_JSON))
                .andExpect(MockMvcResultMatchers.status().isOk())
                .andDo(MockMvcResultHandlers.print())
-               .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(user.getId()))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.firstName").value(user.getFirstName()))
-               .andExpect(MockMvcResultMatchers.jsonPath("$.email").value(user.getEmail()));
+               .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(user.getId()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(user.getFirstName()))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"))
+               .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(user.getEmail()));
    }
+
+    @Test
+    public void test_Insert_Duplicated_User_ToDataBase() throws Exception {
+        User user = User.builder().id(USER_ID).firstName("Marcel").email("marcel.ghisi@gmail.com").build();
+        BDDMockito.given(this.userService.findByEmail(Mockito.anyString())).willReturn(Optional.of(Arrays.asList(user)));
+        BDDMockito.given(this.userService.create(Mockito.any(User.class))).willReturn(user);
+        mockMvc.perform(MockMvcRequestBuilders.post(URL_API_USER)
+                .content(createUserFromJson())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("FAIL"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]").value("User already registered"));
+    }
 
     @Test
     public void test_List_One_New_User_From_DataBase() throws Exception {
@@ -111,7 +129,7 @@ public class UsersControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_API_USER+"/"+USER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.status().isNoContent())
                 .andDo(MockMvcResultHandlers.print());
     }
 
