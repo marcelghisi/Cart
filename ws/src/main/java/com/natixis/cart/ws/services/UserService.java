@@ -1,6 +1,7 @@
 package com.natixis.cart.ws.services;
 
 import com.natixis.cart.ws.domain.User;
+import com.natixis.cart.ws.exception.UserNotFoundExceptionException;
 import com.natixis.cart.ws.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,6 +39,13 @@ public class UserService {
     }
 
     public User update(User user) {
-        return userRepository.save(user);
+        Optional<User> updateUser = userRepository.findById(user.getId());
+        return updateUser.map(u -> userRepository.save(User.builder()
+                .email(user.getEmail())
+                .firstName(user.getFirstName())
+                .password(user.getPassword())
+                .id(user.getId())
+                .cart(user.getCart())
+                .enabled(user.getEnabled()).build())).orElseThrow(()-> new UserNotFoundExceptionException("User Not found"));
     }
 }

@@ -5,7 +5,6 @@ import com.natixis.cart.ws.domain.Cart;
 import com.natixis.cart.ws.domain.User;
 import com.natixis.cart.ws.exception.RuleException;
 import com.natixis.cart.ws.rules.CartRules;
-import com.natixis.cart.ws.services.CartService;
 import com.natixis.cart.ws.services.UserService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +23,6 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*")
 @Log4j2
 public class CartController {
-
-    @Autowired
-    CartService cartService;
 
     @Autowired
     UserService userService;
@@ -66,6 +62,7 @@ public class CartController {
     public ResponseEntity<UserResponse> addItemToUserCart(@PathVariable String userId, @RequestBody Cart cartItem){
         try {
             User user = userService.findById(userId);
+            cartRules.validatePrice(cartItem);
             if (user.getCart() != null && user.getCart().stream().filter(cart->cart.getItem().getId().equals(cartItem.getItem().getId())).count() > 0){
                 UserResponse userResponse = UserResponse.builder().errors(Arrays.asList("Item has already been added")).build();
                 return ResponseEntity.ok(userResponse);
@@ -76,6 +73,9 @@ public class CartController {
                 UserResponse userResponse = UserResponse.builder().data(newUser).status("SUCESS").build();
                 return ResponseEntity.ok(userResponse);
             }
+        } catch (RuleException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.unprocessableEntity().body(UserResponse.builder().errors(Arrays.asList(e.getMessage())).status("ERROR").build());
         } catch (Exception e) {
             log.error(e.getMessage());
             UserResponse userResponse = UserResponse.builder().errors(Arrays.asList("Internal error. Please contact Administrator")).build();

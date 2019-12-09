@@ -39,6 +39,7 @@ public class UsersCartControllerTest {
 
    private static final String URL_API_USER_CART = "/api/users/123456/cart";
     private static final String URL_API_USER_CART_DELETE = "/api/users/123456/cart/111";
+    private static final String URL_API_USER_CART_RESUME = "/api/users/123456/cart/resume";
     private static final String USER_ID = "123456";
 
    @Before
@@ -66,16 +67,16 @@ public class UsersCartControllerTest {
 
     @Test
     public void test_AddItem_Menor_Zero_ToCart_User() throws Exception {
-        Item item = Item.builder().id("111").name("TV").price(-2.0).build();
+        Item item = Item.builder().id("111").name("TV").price(2.0).build();
         Cart cart = Cart.builder().quantidade(1).item(item).build();
         User user  = User.builder().id(USER_ID).firstName("Marcel Jose").cart(Arrays.asList(cart)).email("marcel.ghisi@gmail.com").build();
         BDDMockito.given(this.userService.findById(Mockito.anyString())).willReturn(user);
         BDDMockito.given(this.userService.create(Mockito.any(User.class))).willReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.post(URL_API_USER_CART)
-                .content(createCartFromJson())
+                .content(createNegativeCartFromJson())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isNotAcceptable())
+                .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]").value("Value needs to be positive"));
     }
@@ -114,7 +115,35 @@ public class UsersCartControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
     }
 
+    @Test
+    public void test_Resume_UserCart_Ordered_History() throws Exception {
+        Item item = Item.builder().id("111").name("TV").price(5.0).build();
+        Cart cart = Cart.builder().quantidade(1).item(item).build();
+        List<Cart> cartList = new ArrayList<>(0);
+        cartList.add(cart);
+        User user2 = User.builder().id(USER_ID).firstName("Marcel Jose").cart(cartList).email("marcel.ghisi@gmail.com").build();
+        BDDMockito.given(this.userService.findById(Mockito.anyString())).willReturn(user2);
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_USER_CART_RESUME)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
+    }
 
+    @Test
+    public void test_ClosePurchase_Cleaning_UserCart_And_Saving_Cart_History() throws Exception {
+        Item item = Item.builder().id("111").name("TV").price(5.0).build();
+        Cart cart = Cart.builder().quantidade(1).item(item).build();
+        List<Cart> cartList = new ArrayList<>(0);
+        cartList.add(cart);
+        User user2 = User.builder().id(USER_ID).firstName("Marcel Jose").cart(cartList).email("marcel.ghisi@gmail.com").build();
+        BDDMockito.given(this.userService.findById(Mockito.anyString())).willReturn(user2);
+        mockMvc.perform(MockMvcRequestBuilders.delete(URL_API_USER_CART_DELETE)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"));
+    }
 
     private String createCartFromJson() throws JsonProcessingException {
         Item item = Item.builder().id("111").name("Sansung TV").price(2.0).build();
@@ -122,6 +151,14 @@ public class UsersCartControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         String json = mapper.writeValueAsString(cart);
         return json;
-   }
+    }
+
+    private String createNegativeCartFromJson() throws JsonProcessingException {
+        Item item = Item.builder().id("111").name("Sansung TV").price(-2.0).build();
+        Cart cart = Cart.builder().item(item).quantidade(9).build();
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(cart);
+        return json;
+    }
 
 }

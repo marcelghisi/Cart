@@ -36,7 +36,8 @@ public class UsersControllerTest {
    UserService userService;
 
    private static final String URL_API_USER = "/api/users";
-    private static final String USER_ID = "123123123";
+   private static final String URL_API_USER_LOGIN = "/api/users/login";
+   private static final String USER_ID = "123123123";
 
    @Before
    public void setup(){
@@ -124,6 +125,23 @@ public class UsersControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.[1].id").value(user2.getId()));
     }
 
+
+    @Test
+    public void test_Login() throws Exception {
+        User user = User.builder().id(USER_ID).firstName("Marcel").email("marcel.ghisi@gmail.com").password("123").build();
+        BDDMockito.given(this.userService.findByEmail(Mockito.anyString())).willReturn(Optional.of(Arrays.asList(user)));
+        mockMvc.perform(MockMvcRequestBuilders.post(URL_API_USER_LOGIN)
+                .content(createUserForLogin())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id").value(user.getId()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.firstName").value(user.getFirstName()))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value("SUCCESS"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.email").value(user.getEmail()));
+    }
+
     @Test
     public void test_Delete_User_From_DataBase() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete(URL_API_USER+"/"+USER_ID)
@@ -134,6 +152,13 @@ public class UsersControllerTest {
     }
 
 
+
+    private String createUserForLogin() throws JsonProcessingException {
+        User user = User.builder().email("marcel.ghisi@gmail.com").password("123").build();
+        ObjectMapper mapper = new ObjectMapper();
+        String json = mapper.writeValueAsString(user);
+        return json;
+    }
     private String createUserFromJson() throws JsonProcessingException {
         User user = User.builder().firstName("Marcel").email("marcel.ghisi@gmail.com").build();
         ObjectMapper mapper = new ObjectMapper();

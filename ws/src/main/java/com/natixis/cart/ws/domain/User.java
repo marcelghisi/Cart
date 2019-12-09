@@ -23,6 +23,8 @@ public class User implements Serializable {
     private String id;
     private String firstName;
     private String email;
+    private String password;
+    private Boolean enabled;
     private List<Cart> cart;
 
     @Override
