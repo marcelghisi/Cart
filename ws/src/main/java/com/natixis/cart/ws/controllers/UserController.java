@@ -14,7 +14,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "*")
 public class UserController {
 
     @Autowired

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../../core/api.service'
-import { User } from 'src/app/core/model/login';
+import { User } from 'src/app/core/model/user';
 import { Router } from '@angular/router';
 
 @Component({
@@ -19,7 +19,13 @@ export class LoginUserComponent implements OnInit {
 
   public login(){
     this.apiService.login(this.user).subscribe( data =>{
-      this.loginSuccess(data);
+      console.log(data);
+      let responseObj = JSON.parse(JSON.stringify(data))
+      if (responseObj.status == 'FAIL'){
+        console.log('User or password invalid')
+      } else {
+        this.loginSuccess(responseObj.data);
+      }
     },error=>{
       console.log('Error ao fazer login');
     });
@@ -27,17 +33,15 @@ export class LoginUserComponent implements OnInit {
   
   public loginSuccess(data: any) {
     localStorage.clear();
-    this.apiService.login(data).subscribe(data => {
-      this.redirectPage(data);
-    }, error => {
-      console.log('Error getting user');
-    });
+    let user: User = data;
+    this.redirectPage(user);
+
   }
 
   /**
    * name
    */
-  public redirectPage(user: any) {
+  public redirectPage(user: User) {
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.router.navigate(['welcome']);
   }

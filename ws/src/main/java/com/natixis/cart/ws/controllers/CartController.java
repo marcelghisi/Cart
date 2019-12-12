@@ -69,7 +69,7 @@ public class CartController {
             } else {
                 List<Cart> cart = user.getCart() == null ? new ArrayList<>(0) : user.getCart();
                 cart.add(cartItem);
-                User newUser = userService.update(User.builder().id(user.getId()).email(user.getEmail()).firstName(user.getFirstName()).cart(cart).build());
+                User newUser = userService.update(User.builder().id(user.getId()).password(user.getPassword()).email(user.getEmail()).firstName(user.getFirstName()).cart(cart).build());
                 UserResponse userResponse = UserResponse.builder().data(newUser).status("SUCESS").build();
                 return ResponseEntity.ok(userResponse);
             }

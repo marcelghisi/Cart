@@ -15,6 +15,8 @@ import { MDBBootstrapModule } from 'angular-bootstrap-md';
 import { HttpClientModule } from '@angular/common/http';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiService } from './core/api.service';
+import { CartDetailComponent } from './components/cart-detail/cart-detail.component';
+import { CartResumeComponent } from './components/cart-resume/cart-resume.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ApiService } from './core/api.service';
     ListUserComponent,
     WelcomeComponent,
     HeaderComponent,
-    DeleteUserModalComponent
+    DeleteUserModalComponent,
+    CartDetailComponent,
+    CartResumeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { User } from 'src/app/core/model/user';
+import { ApiService } from 'src/app/core/api.service'
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-register-user',
@@ -7,9 +10,23 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RegisterUserComponent implements OnInit {
 
-  constructor() { }
+  public user = new User();
+
+  constructor(private apiService: ApiService,private location:Location) { }
 
   ngOnInit() {
+  }
+
+  public save(){
+    this.apiService.registerUser(this.user).subscribe(response => {
+      console.log("Usuario registrado")
+    },error => {
+      console.log("Erro ao criar usuario",error);
+    });
+  } 
+
+  goBack(){
+    this.location.back();
   }
 
 }
