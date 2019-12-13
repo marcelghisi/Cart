@@ -1,17 +1,18 @@
-<mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark default-color ie-nav" [containerInside]="false">
+<mdb-navbar>
+<mdb-navbar style="height: 30px;" SideClass="navbar navbar-expand-lg navbar-dark default-color ie-nav" [containerInside]="false">
     <mdb-navbar-brand>
         <a class="logo navbar-brand" routerLink="/welcome"><strong>Loja virtual Nat</strong></a>
     </mdb-navbar-brand>
     <links>
         <ul class="navbar-nav ml-auto nav-flex-icons">
-            <li class="nav-item waves-light" mdbWavesEffect> <a class="nav-link" routerLink="login" routerLinkActive="active">Login</a> </li>
-            <li class="nav-item waves-light" mdbWavesEffect> <a class="nav-link" routerLink="register-user" routerLinkActive="active">Registre-se</a> </li>
+            <li *ngIf="user == null" class="nav-item waves-light" mdbWavesEffect> <a class="nav-link" routerLink="login" routerLinkActive="active">Login</a> </li>
+            <li *ngIf="user == null" class="nav-item waves-light" mdbWavesEffect> <a class="nav-link" routerLink="register-user" routerLinkActive="active">Registre-se</a> </li>
         </ul>
+
         <ul class="navbar-nav ml-auto nav-flex-icons">
-            <li class="nav-item waves-light py-1 mx-3" mdbWavesEffect> <a class="nav-link" routerLink="list-user" routerLinkActive="active">Usuários</a></li>
-            <li class="nav-item dropdown" dropdown>
+            <li *ngIf="user != null" class="nav-item dropdown" dropdown>
                 <a dropdownToggle mdbWavesEffect type="button" class="nav-link dropdown- toggle waves-light" mdbWavesEffect>
-                    <img src="../../assets/img/man.png" class="img-fluid rounded-circlez-depth-0">
+                    <img src="../../assets/img/man.png" style="width: 40px;height: 40px;" class="img-fluid rounded-circlez-depth-0">
                     <span class="caret"></span>
                 </a>
                 <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">

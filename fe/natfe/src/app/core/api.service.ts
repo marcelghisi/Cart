@@ -41,6 +41,14 @@ export class ApiService {
     });
   }
 
+  deleteCart(user:User,cart:Cart): Observable<any> {
+    let headers = new HttpHeaders(
+      {'Content-Type':  'application/json',}
+      );
+
+    return this.httpClient.delete(`${AppUtils.BASE_URL}` + 'api/users/'+`${user.id}`+'/cart/'+`${cart.item.id}`);
+  }
+
   getUser(user:User): Observable<any> {
     let headers = new HttpHeaders(
       {'Content-Type':  'application/json',}

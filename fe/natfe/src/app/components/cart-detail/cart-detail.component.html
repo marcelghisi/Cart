@@ -3,9 +3,9 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
-        <strong class="blue-text">Detail</strong>
-      </a>
+      <a class="navbar-brand waves-effect" routerLink="welcome" routerLinkActive="active">
+          <strong class="blue-text">NTXStore</strong>
+        </a>
 
       <!-- Collapse -->
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
@@ -19,48 +19,42 @@
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link waves-effect" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">About MDB</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/getting-started/download/"
-              target="_blank">Free download</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/education/bootstrap/" target="_blank">Free
-              tutorials</a>
-          </li>
+              <a class="nav-link waves-effect" routerLink="welcome" routerLinkActive="active">Home
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
+            <li class="nav-item">
+                <a role='button' (click)="callResume()" class="nav-link waves-effect">
+                  <span class="badge red z-depth-1 mr-1"> {{quantity}} </span>
+                  <i class="fas fa-shopping-cart"></i>
+                  <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+                </a>
+              </li>
           <li class="nav-item">
-            <a class="nav-link waves-effect">
-              <span class="badge red z-depth-1 mr-1"> {{quantity}} </span>
-              <i class="fas fa-shopping-cart"></i>
-              <span class="clearfix d-none d-sm-inline-block"> Cart </span>
+            <a href="#" class="nav-link waves-effect" target="_blank">
+              
             </a>
           </li>
           <li class="nav-item">
-            <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect" target="_blank">
-              <i class="fab fa-facebook-f"></i>
+            <a href="#" class="nav-link waves-effect" target="_blank">
+              
             </a>
           </li>
           <li class="nav-item">
-            <a href="https://twitter.com/MDBootstrap" class="nav-link waves-effect" target="_blank">
-              <i class="fab fa-twitter"></i>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="nav-link border border-light rounded waves-effect"
+            <a href="#" class="nav-link border border-light rounded waves-effect"
               target="_blank">
-              <i class="fab fa-github mr-2"></i>MDB GitHub
             </a>
           </li>
+          <li class="nav-item">
+              <a (click)="logout()" class="nav-link border border-light rounded waves-effect"
+                target="_blank">
+                Sair
+              </a>
+            </li>
         </ul>
 
       </div>
@@ -102,7 +96,7 @@
 
             <form class="d-flex justify-content-left">
               <!-- Default input -->
-              <input [(ngModel)]="quantity" aria-label="Search" name="quantity" class="form-control" style="width: 100px">
+              <input [(ngModel)]="quantityToBuy" aria-label="Search" name="quantityToBuy" class="form-control" style="width: 100px">
               <button class="btn btn-primary btn-md my-0 p" (click)="addToCart()" type="submit">Add to cart
                 <i class="fas fa-shopping-cart ml-1"></i>
               </button>

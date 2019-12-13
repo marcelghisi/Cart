@@ -1,7 +1,7 @@
 package com.natixis.cart.ws.services;
 
 import com.natixis.cart.ws.domain.User;
-import com.natixis.cart.ws.exception.UserNotFoundExceptionException;
+import com.natixis.cart.ws.exception.UserServiceException;
 import com.natixis.cart.ws.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class UserService {
 
     public User findById(String userId) throws Exception {
         Optional<User> user = userRepository.findById(userId);
-        return user.orElseThrow(()-> new Exception("todo"));
+        return user.orElseThrow(()-> new UserServiceException("User not found"));
     }
 
     public Optional<List<User>> findByEmail(String email) throws Exception {
@@ -46,6 +46,6 @@ public class UserService {
                 .password(user.getPassword())
                 .id(user.getId())
                 .cart(user.getCart())
-                .enabled(user.getEnabled()).build())).orElseThrow(()-> new UserNotFoundExceptionException("User Not found"));
+                .enabled(user.getEnabled()).build())).orElseThrow(()-> new UserServiceException("User Not found"));
     }
 }

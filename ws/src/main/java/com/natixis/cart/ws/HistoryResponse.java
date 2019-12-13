@@ -1,6 +1,6 @@
 package com.natixis.cart.ws;
 
-import com.natixis.cart.ws.domain.User;
+import com.natixis.cart.ws.domain.PurchaseCartHistory;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -8,8 +8,8 @@ import java.util.List;
 
 @Builder
 @Getter
-public class ResumeResponse {
+public class HistoryResponse {
     String status;
-    User data;
+    List<PurchaseCartHistory> data;
     List<String> errors;
 }

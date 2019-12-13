@@ -1,6 +1,6 @@
 package com.natixis.cart.ws.services;
 
-import com.natixis.cart.ws.domain.Item;
+import com.natixis.cart.ws.domain.Product;
 import com.natixis.cart.ws.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,16 +14,16 @@ public class ItemService {
     @Autowired
     ItemRepository itemRepository;
 
-    public Item create(final Item item) {
-        return itemRepository.save(item);
+    public Product create(final Product product) {
+        return itemRepository.save(product);
     }
 
-    public Item findById(String itemId) throws Exception {
-        final Optional<Item> item = itemRepository.findById(itemId);
+    public Product findById(String itemId) throws Exception {
+        final Optional<Product> item = itemRepository.findById(itemId);
         return item.orElseThrow(()-> new Exception("todo"));
     }
 
-    public List<Item> findAll() {
+    public List<Product> findAll() {
         return itemRepository.findAll();
     }
 
@@ -31,7 +31,7 @@ public class ItemService {
         itemRepository.deleteById(itemId);
     }
 
-    public Item update(final Item item) {
-        return itemRepository.save(item);
+    public Product update(final Product product) {
+        return itemRepository.save(product);
     }
 }

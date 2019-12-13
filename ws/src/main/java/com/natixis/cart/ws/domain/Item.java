@@ -1,10 +1,6 @@
 package com.natixis.cart.ws.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -12,30 +8,27 @@ import java.util.Objects;
 
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
 public class Item implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
-    @Id
-    private String id;
-    private String name;
-    private Double price;
+    private Integer quantity;
+    private Product product;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Item item = (Item) o;
-        return id.equals(item.id) &&
-                name.equals(item.name) &&
-                price.equals(item.price);
+        return  quantity.equals(item.quantity) &&
+                product.equals(item.product);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, price);
+        return Objects.hash(quantity, product);
     }
 }

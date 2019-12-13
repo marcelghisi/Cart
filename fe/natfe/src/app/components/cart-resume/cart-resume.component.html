@@ -3,8 +3,8 @@
     <div class="container">
 
       <!-- Brand -->
-      <a class="navbar-brand waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">
-        <strong class="blue-text">MDB</strong>
+      <a class="navbar-brand waves-effect"  routerLink="/welcome" routerLinkActive="active">
+        <strong class="blue-text">NTXStore</strong>
       </a>
 
       <!-- Collapse -->
@@ -18,47 +18,44 @@
 
         <!-- Left -->
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item active">
-            <a class="nav-link waves-effect" href="#">Home
-              <span class="sr-only">(current)</span>
-            </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/" target="_blank">About MDB</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/docs/jquery/getting-started/download/" target="_blank">Free download</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link waves-effect" href="https://mdbootstrap.com/education/bootstrap/" target="_blank">Free tutorials</a>
-          </li>
+                <li class="nav-item active">
+                    <a class="nav-link waves-effect" routerLink="/welcome" routerLinkActive="active">Home
+                      <span class="sr-only">(current)</span>
+                    </a>
+                  </li>
         </ul>
 
         <!-- Right -->
         <ul class="navbar-nav nav-flex-icons">
           <li class="nav-item">
             <a class="nav-link waves-effect">
-              <span class="badge red z-depth-1 mr-1"> 1 </span>
+              <span class="badge red z-depth-1 mr-1"> {{quantity}} </span>
               <i class="fas fa-shopping-cart"></i>
               <span class="clearfix d-none d-sm-inline-block"> Cart </span>
             </a>
           </li>
           <li class="nav-item">
-            <a href="https://www.facebook.com/mdbootstrap" class="nav-link waves-effect" target="_blank">
-              <i class="fab fa-facebook-f"></i>
+            <a href="#" class="nav-link waves-effect" target="_blank">
+              
             </a>
           </li>
           <li class="nav-item">
-            <a href="https://twitter.com/MDBootstrap" class="nav-link waves-effect" target="_blank">
-              <i class="fab fa-twitter"></i>
+            <a href="#" class="nav-link waves-effect" target="_blank">
+              
             </a>
           </li>
           <li class="nav-item">
-            <a href="https://github.com/mdbootstrap/bootstrap-material-design" class="nav-link border border-light rounded waves-effect"
+            <a href="#" class="nav-link border border-light rounded waves-effect"
               target="_blank">
-              <i class="fab fa-github mr-2"></i>MDB GitHub
+              
             </a>
           </li>
+          <li class="nav-item">
+                <a (click)="logout()" class="nav-link border border-light rounded waves-effect"
+                  target="_blank">
+                  Sair
+                </a>
+              </li>
         </ul>
 
       </div>
@@ -126,19 +123,19 @@
 
               <!--email-->
               <div class="md-form mb-5">
-                <input type="text" id="email" class="form-control" placeholder="youremail@example.com">
+                <input type="text" id="email" class="form-control">
                 <label for="email" class="">Email (optional)</label>
               </div>
 
               <!--address-->
               <div class="md-form mb-5">
-                <input type="text" id="address" class="form-control" placeholder="1234 Main St">
+                <input type="text" id="address" class="form-control" >
                 <label for="address" class="">Address</label>
               </div>
 
               <!--address-2-->
               <div class="md-form mb-5">
-                <input type="text" id="address-2" class="form-control" placeholder="Apartment or suite">
+                <input type="text" id="address-2" class="form-control">
                 <label for="address-2" class="">Address 2 (optional)</label>
               </div>
 
@@ -267,17 +264,21 @@
           <!-- Heading -->
           <h4 class="d-flex justify-content-between align-items-center mb-3">
             <span class="text-muted">Your cart</span>
-            <span class="badge badge-secondary badge-pill">3</span>
+            <span class="badge badge-secondary badge-pill">{{quantity}}</span>
           </h4>
 
           <!-- Cart -->
           <ul class="list-group mb-3 z-depth-1">
             <li *ngFor="let cart of carts" class="list-group-item d-flex justify-content-between lh-condensed">
+              <span class="text-muted">{{cart.quantidade}}</span>
               <div>
                 <h6 class="my-0">{{cart.item.name}}</h6>
                 <small class="text-muted">Brief description</small>
               </div>
               <span class="text-muted">${{cart.item.price}}</span>
+              <button (click)="deleteCart(cart)" type="button" class="close" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+              </button>
             </li>
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>

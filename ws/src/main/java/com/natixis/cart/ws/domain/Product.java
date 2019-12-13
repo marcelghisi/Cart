@@ -1,7 +1,9 @@
 package com.natixis.cart.ws.domain;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,34 +12,30 @@ import java.util.Objects;
 
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Document
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class User implements Serializable {
+public class Product implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
     @Id
     private String id;
-    private String firstName;
-    private String email;
-    private String password;
-    private Boolean enabled;
-    private Cart cart;
+    private String name;
+    private Double price;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return id.equals(user.id) &&
-                firstName.equals(user.firstName) &&
-                email.equals(user.email);
+        Product product = (Product) o;
+        return id.equals(product.id) &&
+                name.equals(product.name) &&
+                price.equals(product.price);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, email);
+        return Objects.hash(id, name, price);
     }
 }

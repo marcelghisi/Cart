@@ -1,6 +1,6 @@
 package com.natixis.cart.ws.controllers;
 
-import com.natixis.cart.ws.domain.Item;
+import com.natixis.cart.ws.domain.Product;
 import com.natixis.cart.ws.services.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +18,15 @@ public class ItemController {
 
 
     @PutMapping("/items")
-    public ResponseEntity<Item> updateItem(@RequestBody Item item){
-        Item newItem = itemService.update(item);
-        return ResponseEntity.ok().body(newItem);
+    public ResponseEntity<Product> updateItem(@RequestBody Product product){
+        Product newProduct = itemService.update(product);
+        return ResponseEntity.ok().body(newProduct);
     }
 
     @PostMapping("/items")
-    public ResponseEntity<Item> createItem(@RequestBody Item item){
-        final Item newItem = itemService.create(item);
-        return ResponseEntity.ok().body(newItem);
+    public ResponseEntity<Product> createItem(@RequestBody Product product){
+        final Product newProduct = itemService.create(product);
+        return ResponseEntity.ok().body(newProduct);
     }
     @DeleteMapping("/items/{itemId}")
     public ResponseEntity<Void> deleteItem(@PathVariable String itemId) {
@@ -34,10 +34,10 @@ public class ItemController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/items/{itemId}")
-    public ResponseEntity<Item> findById(@PathVariable String itemId){
+    public ResponseEntity<Product> findById(@PathVariable String itemId){
         try {
-            final Item newItem = itemService.findById(itemId);
-            return ResponseEntity.ok().body(newItem);
+            final Product newProduct = itemService.findById(itemId);
+            return ResponseEntity.ok().body(newProduct);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,8 +45,8 @@ public class ItemController {
     }
 
     @GetMapping("/items")
-    public ResponseEntity<List<Item>> findAll() {
-        List<Item> items = itemService.findAll();
-        return ResponseEntity.ok().body(items);
+    public ResponseEntity<List<Product>> findAll() {
+        List<Product> products = itemService.findAll();
+        return ResponseEntity.ok().body(products);
     }
 }
