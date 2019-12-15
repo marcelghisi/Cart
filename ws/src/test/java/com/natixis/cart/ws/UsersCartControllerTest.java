@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.natixis.cart.ws.domain.*;
 import com.natixis.cart.ws.exception.RuleException;
+import com.natixis.cart.ws.exception.UserServiceException;
 import com.natixis.cart.ws.rules.CartRules;
 import com.natixis.cart.ws.services.PurchaseCartHistoryService;
 import com.natixis.cart.ws.services.UserService;
@@ -100,6 +101,22 @@ public class UsersCartControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isUnprocessableEntity())
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errors[0]").value("Value needs to be positive"));
+    }
+
+    @Test
+    public void test_AddItem_User_Not_Found() throws Exception {
+        Product product = Product.builder().id("111").name("TV").price(2.0).build();
+        Item item = Item.builder().product(product).quantity(1).build();
+        List<Item> lista = new ArrayList<>();
+        lista.add(item);
+        Cart cart = Cart.builder().totalValue(2.0).items(lista).build();
+        User user  = User.builder().id(USER_ID).firstName("Marcel Jose").cart(cart).email("marcel.ghisi@gmail.com").build();
+        BDDMockito.given(this.userService.findById(Mockito.anyString())).willThrow(new UserServiceException("User not found"));
+        mockMvc.perform(MockMvcRequestBuilders.post(URL_API_USER_CART)
+                .content(createNegativeCartFromJson())
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 
     @Test

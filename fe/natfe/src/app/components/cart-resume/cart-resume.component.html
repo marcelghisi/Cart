@@ -248,7 +248,7 @@
                 </div>
               </div>
               <hr class="mb-4">
-              <button class="btn btn-primary btn-lg btn-block" type="submit">Continue to checkout</button>
+              <button class="btn btn-primary btn-lg btn-block" (click)="goToCheckout()"type="submit">Continue to checkout</button>
 
             </form>
 
@@ -269,20 +269,20 @@
 
           <!-- Cart -->
           <ul class="list-group mb-3 z-depth-1">
-            <li *ngFor="let cart of carts" class="list-group-item d-flex justify-content-between lh-condensed">
-              <span class="text-muted">{{cart.quantidade}}</span>
+            <li *ngFor="let item of cart.items" class="list-group-item d-flex justify-content-between lh-condensed">
+              <span class="text-muted">{{item.quantity}}</span>
               <div>
-                <h6 class="my-0">{{cart.item.name}}</h6>
+                <h6 class="my-0">{{item.product.name}}</h6>
                 <small class="text-muted">Brief description</small>
               </div>
-              <span class="text-muted">${{cart.item.price}}</span>
-              <button (click)="deleteCart(cart)" type="button" class="close" aria-label="Close">
+              <span class="text-muted">${{item.product.price}}</span>
+              <button (click)="deleteCart(item.product)" type="button" class="close" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
               </button>
             </li>
             <li class="list-group-item d-flex justify-content-between">
               <span>Total (USD)</span>
-              <strong>$20</strong>
+              <strong>${{cart.totalValue}}</strong>
             </li>
           </ul>
           <!-- Cart -->
@@ -297,6 +297,12 @@
             </div>
           </form>
           <!-- Promo code -->
+
+        <!-- Promo code -->
+        <form class="card p-2">
+           <button class="btn btn-primary btn-lg btn-block" (click)="goToCheckout()"type="submit">Continue to checkout</button>
+        </form>
+        <!-- Promo code -->
 
         </div>
         <!--Grid column-->

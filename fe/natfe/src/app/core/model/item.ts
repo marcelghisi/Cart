@@ -1,5 +1,5 @@
+import { Product } from 'src/app/core/model/product'
 export class Item{
-    id?: string;
-    name : string;
-    price: string;
+    quantity: string;
+    product : Product;
 }

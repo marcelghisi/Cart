@@ -17,6 +17,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ApiService } from './core/api.service';
 import { CartDetailComponent } from './components/cart-detail/cart-detail.component';
 import { CartResumeComponent } from './components/cart-resume/cart-resume.component';
+import { PurchasesComponent } from './components/purchases/purchases.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ToastrModule } from 'ngx-toastr';
+import { MessageService } from './core/message.service';
 
 @NgModule({
   declarations: [
@@ -27,10 +31,12 @@ import { CartResumeComponent } from './components/cart-resume/cart-resume.compon
     EditUserComponent,
     ListUserComponent,
     WelcomeComponent,
+
     HeaderComponent,
     DeleteUserModalComponent,
     CartDetailComponent,
-    CartResumeComponent
+    CartResumeComponent,
+    PurchasesComponent
   ],
   imports: [
     BrowserModule,
@@ -38,9 +44,14 @@ import { CartResumeComponent } from './components/cart-resume/cart-resume.compon
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      timeOut: 4000,
+      positionClass: 'toast-top-center'
+    })
   ],
-  providers: [ApiService],
+  providers: [ApiService,MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

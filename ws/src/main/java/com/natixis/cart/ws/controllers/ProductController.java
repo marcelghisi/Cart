@@ -1,7 +1,7 @@
 package com.natixis.cart.ws.controllers;
 
 import com.natixis.cart.ws.domain.Product;
-import com.natixis.cart.ws.services.ItemService;
+import com.natixis.cart.ws.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,32 +11,32 @@ import java.util.List;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "*")
-public class ItemController {
+public class ProductController {
 
     @Autowired
-    ItemService itemService;
+    ProductService productService;
 
 
-    @PutMapping("/items")
+    @PutMapping("/products")
     public ResponseEntity<Product> updateItem(@RequestBody Product product){
-        Product newProduct = itemService.update(product);
+        Product newProduct = productService.update(product);
         return ResponseEntity.ok().body(newProduct);
     }
 
-    @PostMapping("/items")
+    @PostMapping("/products")
     public ResponseEntity<Product> createItem(@RequestBody Product product){
-        final Product newProduct = itemService.create(product);
+        final Product newProduct = productService.create(product);
         return ResponseEntity.ok().body(newProduct);
     }
-    @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<Void> deleteItem(@PathVariable String itemId) {
-        itemService.delete(itemId);
+    @DeleteMapping("/products/{productId}")
+    public ResponseEntity<Void> deleteItem(@PathVariable String productId) {
+        productService.delete(productId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/items/{itemId}")
-    public ResponseEntity<Product> findById(@PathVariable String itemId){
+    @GetMapping("/products/{productId}")
+    public ResponseEntity<Product> findById(@PathVariable String productId){
         try {
-            final Product newProduct = itemService.findById(itemId);
+            final Product newProduct = productService.findById(productId);
             return ResponseEntity.ok().body(newProduct);
         } catch (Exception e) {
             e.printStackTrace();
@@ -44,9 +44,9 @@ public class ItemController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/items")
+    @GetMapping("/products")
     public ResponseEntity<List<Product>> findAll() {
-        List<Product> products = itemService.findAll();
+        List<Product> products = productService.findAll();
         return ResponseEntity.ok().body(products);
     }
 }

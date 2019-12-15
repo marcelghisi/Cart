@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -86,6 +89,9 @@ public class CartController {
                 UserResponse userResponse = UserResponse.builder().data(newUser).status("SUCESS").build();
                 return ResponseEntity.ok(userResponse);
             }
+        } catch (UserServiceException e) {
+            log.error(e.getMessage());
+            return ResponseEntity.notFound().build();
         } catch (RuleException e) {
             log.error(e.getMessage());
             return ResponseEntity.unprocessableEntity().body(UserResponse.builder().errors(Arrays.asList(e.getMessage())).status("ERROR").build());
@@ -161,18 +167,26 @@ public class CartController {
                 }
             }
         } catch (UserServiceException e) {
-            return ResponseEntity.ok().body(UserResponse.builder().errors(Arrays.asList(e.getMessage())).status("FAIL").build());
+            return ResponseEntity.notFound().build();
         } catch (Exception e) {
             log.error("finalizeCheckout Error",e.getMessage());
             return ResponseEntity.ok().body(UserResponse.builder().errors(Arrays.asList("Internal server error",e.getMessage())).status("FAIL").build());
         }
-        return ResponseEntity.ok().body(UserResponse.builder().errors(Arrays.asList("User not found")).status("FAIL").build());
+        return ResponseEntity.unprocessableEntity().build();
     }
 
     @GetMapping("/users/{userId}/cart/history")
     public ResponseEntity<HistoryResponse> listHistory(@PathVariable String userId){
         List<PurchaseCartHistory> histories = purchaseCartHistoryService.findByUserId(userId);
-        return ResponseEntity.ok().body(HistoryResponse.builder().status("SUCCESS").data(histories).build());
+        DateTimeFormatter outFormat = DateTimeFormatter.ofPattern("yyyy/M/dd");
+        DateFormat dateFormat = new SimpleDateFormat("dd/M/yyyy");
+        List<PurchaseCartHistory> formatted = histories.stream().map(his -> PurchaseCartHistory.builder()
+                .id(his.getId())
+                .purchaseDate(his.getPurchaseDate())
+                .user(his.getUser())
+                .status(his.getStatus())
+                .formattedDate(dateFormat.format(his.getPurchaseDate())).build()).collect(Collectors.toList());
+        return ResponseEntity.ok().body(HistoryResponse.builder().status("SUCCESS").data(formatted).build());
     }
 
 

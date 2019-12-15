@@ -3,11 +3,14 @@ package com.natixis.cart.ws;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.natixis.cart.ws.domain.Product;
-import com.natixis.cart.ws.services.ItemService;
+import com.natixis.cart.ws.repository.ProductRepository;
+import com.natixis.cart.ws.services.ProductService;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,6 +25,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,9 +37,12 @@ public class ProductControllerTest {
     MockMvc mockMvc;
 
    @MockBean
-   ItemService itemService;
+   ProductService productService;
 
-   private static final String URL_API_ITEM = "/api/items";
+   @Mock
+    ProductRepository productRepository;
+
+   private static final String URL_API_PRODUCTS = "/api/products";
 
    @Before
    public void setup(){
@@ -45,8 +52,8 @@ public class ProductControllerTest {
     @Test
     public void test_Update_User() throws Exception {
         Product product = Product.builder().id("1").name("TV").price(300.00).build();
-        BDDMockito.given(this.itemService.update(Mockito.any(Product.class))).willReturn(product);
-        mockMvc.perform(MockMvcRequestBuilders.put(URL_API_ITEM)
+        BDDMockito.given(this.productService.update(Mockito.any(Product.class))).willReturn(product);
+        mockMvc.perform(MockMvcRequestBuilders.put(URL_API_PRODUCTS)
                 .content(createUserFromJson())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -60,8 +67,8 @@ public class ProductControllerTest {
    @Test
     public void test_Insert_New_User_ToDataBase() throws Exception {
        Product product = Product.builder().id("1").name("TV").price(300.00).build();
-       BDDMockito.given(this.itemService.create(Mockito.any(Product.class))).willReturn(product);
-       mockMvc.perform(MockMvcRequestBuilders.post(URL_API_ITEM)
+       BDDMockito.given(this.productService.create(Mockito.any(Product.class))).willReturn(product);
+       mockMvc.perform(MockMvcRequestBuilders.post(URL_API_PRODUCTS)
                .content(createUserFromJson())
                .contentType(MediaType.APPLICATION_JSON)
                .accept(MediaType.APPLICATION_JSON))
@@ -75,8 +82,8 @@ public class ProductControllerTest {
     @Test
     public void test_List_One_New_User_From_DataBase() throws Exception {
         Product product = Product.builder().id("1").name("TV").price(300.00).build();
-        BDDMockito.given(this.itemService.findById(Mockito.anyString())).willReturn(product);
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_ITEM +"/"+ ITEM_ID)
+        BDDMockito.given(this.productService.findById(Mockito.anyString())).willReturn(product);
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_PRODUCTS +"/"+ ITEM_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -87,15 +94,28 @@ public class ProductControllerTest {
     }
 
     @Test
+    public void test_findById() throws Exception {
+       Product product = Product.builder().id("1111").name("Sansung").price(2.4).build();
+       BDDMockito.given(this.productRepository.findById(Mockito.any())).willReturn(Optional.of(product));
+       BDDMockito.given(this.productService.findById(Mockito.any())).willReturn(product);
+       mockMvc.perform(MockMvcRequestBuilders.get(URL_API_PRODUCTS+"/"+ITEM_ID)
+       .contentType(MediaType.APPLICATION_JSON)
+       .accept(MediaType.APPLICATION_JSON))
+       .andExpect(MockMvcResultMatchers.jsonPath("$.id").value(product.getId()));
+       Product foundProduct = this.productService.findById(product.getId());
+       Assert.assertEquals(product.getId(),foundProduct.getId());
+    }
+
+    @Test
     public void test_List_All_New_User_From_DataBase() throws Exception {
         Product product1 = Product.builder().id("1").name("TV").price(300.00).build();
         Product product2 = Product.builder().id("1").name("TV").price(300.00).build();
 
         List<Product> itens = Arrays.asList(product1, product2);
 
-        BDDMockito.given(this.itemService.findAll()).willReturn(itens);
+        BDDMockito.given(this.productService.findAll()).willReturn(itens);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_ITEM)
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_PRODUCTS)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -106,7 +126,7 @@ public class ProductControllerTest {
 
     @Test
     public void test_Delete_User_From_DataBase() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_ITEM +"/"+ITEM_ID)
+        mockMvc.perform(MockMvcRequestBuilders.get(URL_API_PRODUCTS +"/"+ITEM_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())

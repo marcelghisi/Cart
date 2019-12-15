@@ -20,7 +20,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User findById(String userId) throws Exception {
+    public User findById(String userId) throws UserServiceException {
         Optional<User> user = userRepository.findById(userId);
         return user.orElseThrow(()-> new UserServiceException("User not found"));
     }

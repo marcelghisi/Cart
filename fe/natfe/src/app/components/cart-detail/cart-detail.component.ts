@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Item } from 'src/app//core/model/item';
+import { Product } from 'src/app/core/model/product';
 import { Router } from '@angular/router'
-import { Cart } from 'src/app/core/model/cart'
+import { Item } from 'src/app/core/model/item'
 import { User } from 'src/app/core/model/user'
 import { ApiService } from 'src/app/core/api.service';
+import { MessageService } from 'src/app/core/message.service';
 
 @Component({
   selector: 'app-cart-detail',
@@ -12,22 +13,21 @@ import { ApiService } from 'src/app/core/api.service';
 })
 export class CartDetailComponent implements OnInit {
 
-  item: Item;
+  product: Product;
   quantity: string;
   quantityToBuy: string;
-  constructor(private apiService:ApiService,private router:Router) { }
+  constructor(private apiService:ApiService,private router:Router,private messageService:MessageService ) { }
 
   ngOnInit() {
     this.quantityToBuy="1";
-    console.log('onInitcartdetail');
-    this.item = history.state.data;
+    this.product = history.state.data;
     let user:User = JSON.parse(localStorage.getItem('currentUser'));
     this.apiService.getUser(user).subscribe(response => {
       console.log(response);
       let responseObj = JSON.parse(JSON.stringify(response));
       let cart = responseObj.cart;
       if (cart != undefined){
-        this.quantity = cart.length.toString();
+        this.quantity = cart.items.length.toString();
       } else {
         this.quantity = '0';
       }
@@ -39,27 +39,29 @@ export class CartDetailComponent implements OnInit {
   }
 
   public addToCart(){
-    var cart: Cart = new Cart();
-    cart.quantidade = this.quantityToBuy;
-    cart.item = this.item;
+    var item: Item = new Item();
+    item.quantity = this.quantityToBuy;
+    item.product = this.product;
     let user = JSON.parse(localStorage.getItem('currentUser'));
-    this.apiService.addCart(user,cart).subscribe(response => {
+    this.apiService.addCart(user,item).subscribe(response => {
       let responseObj = JSON.parse(JSON.stringify(response));
       if (responseObj.status == 'FAIL'){
+        this.messageService.showErrorMessage('Error',responseObj.errors[0]);
         console.log(responseObj.errors[0]);
       } else {
-        console.log("Cart added !")
+        this.messageService.showSuccessMessage('Success','Product added to your cart successfully!');
       }
       console.log(response);
     },error => {
-      console.log("Erro adding card",error);
+      this.messageService.showErrorMessage('Error',error);
     })
     this.router.navigate(['welcome']);
   }
 
   public logout(){
     localStorage.setItem('currentUser',null);
-    this.router.navigate(['login']);
+    this.messageService.showSuccessMessage('Success','Looged out successfully');
+    this.router.navigate(['']);
   }
 
 }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {ApiService} from '../../core/api.service'
 import { User } from 'src/app/core/model/user';
 import { Router } from '@angular/router';
+import { MessageService } from 'src/app/core/message.service';
 
 @Component({
   selector: 'app-login-user',
@@ -12,7 +13,7 @@ export class LoginUserComponent implements OnInit {
 
   user = new User();
 
-  constructor(private apiService:ApiService,private router:Router) { }
+  constructor(private apiService:ApiService,private messageService:MessageService,private router:Router) { }
 
   ngOnInit() {
   }
@@ -22,12 +23,12 @@ export class LoginUserComponent implements OnInit {
       console.log(data);
       let responseObj = JSON.parse(JSON.stringify(data))
       if (responseObj.status == 'FAIL'){
-        console.log('User or password invalid')
+        this.messageService.showErrorMessage('Error','User or password invalid');
       } else {
         this.loginSuccess(responseObj.data);
       }
     },error=>{
-      console.log('Error ao fazer login');
+      this.messageService.showErrorMessage('Error','Error please try again later');
     });
   }
   
@@ -42,6 +43,7 @@ export class LoginUserComponent implements OnInit {
    * name
    */
   public redirectPage(user: User) {
+    this.messageService.showSuccessMessage('LoggedIn','Welcome ' + user.firstName);
     localStorage.setItem('currentUser', JSON.stringify(user));
     this.router.navigate(['welcome']);
   }
