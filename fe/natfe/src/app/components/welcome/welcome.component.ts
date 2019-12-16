@@ -25,15 +25,12 @@ export class WelcomeComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log('ngOnInit welcome');
     this.user = JSON.parse(localStorage.getItem('currentUser'));
-    console.log(this.user);
     if (this.user != null) {
-      console.log(JSON.stringify(this.user));
       this.apiService.getUser(this.user).subscribe(response => {
-        console.log(response);
+        console.log('response raw' + response);
         let responseObj = JSON.parse(JSON.stringify(response));
-        console.log(responseObj);
+        console.log('response obj' + responseObj);
         this.cart = responseObj.cart;
         if (this.cart != undefined){
           console.log('cart'+this.cart)

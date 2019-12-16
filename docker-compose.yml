@@ -13,13 +13,13 @@ services:
     image: marcelghisi/mongontx:v2
     restart: on-failure
     ports:
-      - "27017"
+      - 27017:27017
     networks:
       natx:
         ipv4_address: 172.20.0.18
 
   springboot:
-    image: marcelghisi/springntx:v1
+    image: marcelghisi/springntx:v2
     restart: "no"
     logging:
       driver: "json-file"
