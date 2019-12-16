@@ -1,0 +1,47 @@
+version: '3.7'
+networks:
+  natx:
+    driver_opts:
+      com.docker.network.bridge.name : nat0
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.20.0.1/16
+
+services:
+  mongo:
+    image: marcelghisi/mongontx:v2
+    restart: on-failure
+    ports:
+      - "27017"
+    networks:
+      natx:
+        ipv4_address: 172.20.0.18
+
+  springboot:
+    image: marcelghisi/springntx:v1
+    restart: "no"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "2"
+    depends_on:
+      - mongo
+    ports:
+      - 8080:8080
+    command:  ["java","-Dspring.data.uri=mongodb://mongo/natixisdb", "-Djava.security.egd=file:/dev/./urandom","-jar","/ws.jar"]
+    networks:
+      natx:
+        ipv4_address: 172.20.0.33
+
+  angular:
+    image: marcelghisi/angularntx:v1 
+    build: .
+    volumes:
+      - '/app/node_modules' 
+    ports: 
+      - '4200:4200'
+    networks:
+      natx:
+        ipv4_address: 172.20.0.34

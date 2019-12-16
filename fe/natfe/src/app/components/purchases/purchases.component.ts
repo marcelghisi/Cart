@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService} from 'src/app/core/api.service';
 import { PurchaseCartHistory} from 'src/app/core/model/purchase_cart_history';
+import { MessageService } from 'src/app/core/message.service';
 
 @Component({
   selector: 'app-purchases',
@@ -12,7 +13,7 @@ export class PurchasesComponent implements OnInit {
 
   purchases:PurchaseCartHistory[];
 
-  constructor(private router:Router,private apiService:ApiService) { }
+  constructor(private router:Router,private apiService:ApiService,private messageService: MessageService) { }
 
   ngOnInit() {
     let user = JSON.parse(localStorage.getItem('currentUser'));
@@ -24,5 +25,11 @@ export class PurchasesComponent implements OnInit {
   }
   public gowelcome(){
     this.router.navigate(['welcome']);
+  }
+
+  public logout(){
+    localStorage.setItem('currentUser',null);
+    this.messageService.showSuccessMessage('Logout','You have logged out successfully!')
+    this.router.navigate(['']);
   }
 }

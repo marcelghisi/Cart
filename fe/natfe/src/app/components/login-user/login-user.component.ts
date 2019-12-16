@@ -10,8 +10,8 @@ import { MessageService } from 'src/app/core/message.service';
   styleUrls: ['./login-user.component.scss']
 })
 export class LoginUserComponent implements OnInit {
-
   user = new User();
+  submitted:boolean;
 
   constructor(private apiService:ApiService,private messageService:MessageService,private router:Router) { }
 
@@ -45,6 +45,7 @@ export class LoginUserComponent implements OnInit {
   public redirectPage(user: User) {
     this.messageService.showSuccessMessage('LoggedIn','Welcome ' + user.firstName);
     localStorage.setItem('currentUser', JSON.stringify(user));
+    this.submitted=true;
     this.router.navigate(['welcome']);
   }
 

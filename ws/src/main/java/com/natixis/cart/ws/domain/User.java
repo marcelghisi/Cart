@@ -20,6 +20,7 @@ public class User implements Serializable {
     @Id
     private String id;
     private String firstName;
+    private String lastName;
     private String email;
     private String password;
     private Boolean enabled;
